@@ -1,33 +1,28 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { View,Text,Image } from '@tarojs/components'
 
-import { add, minus, asyncAdd } from '../../actions/counter'
+import iconBasic from '../../assets/images/icon-list-basic.png'
 
 import './index.less'
 
-
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
-}))
 class Index extends Component {
 
-    config = {
+  config = {
     navigationBarTitleText: '首页'
   }
+  constructor () {
+    super(...arguments)
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+    this.state = {
+      list: [
+        {
+          id: 'map',
+          title: '地图组件',
+          content: '地图组件',
+          icon: iconBasic
+        }
+      ]
+    }
   }
 
   componentWillUnmount () { }
@@ -37,13 +32,37 @@ class Index extends Component {
   componentDidHide () { }
 
   render () {
+    const { list } = this.state
+
     return (
-      <View className='index'>
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
-        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <View><Text>{this.props.counter.num}</Text></View>
-        <View><Text>Hello, World</Text></View>
+      <View className='page page-index'>
+        <View className='logo'>
+
+        </View>
+        <View className='page-title'>多端小程序案例</View>
+        <View className='module-list'>
+          {list.map((item, index) => (
+            <View
+              className='module-list__item'
+              key={index}
+              data-id={item.id}
+              data-name={item.title}
+              data-list={item.subpages}
+              onClick={this.gotoPanel}
+            >
+              <View className='module-list__icon'>
+                <Image src={item.icon} className='img' mode='widthFix' />
+              </View>
+              <View className='module-list__info'>
+                <View className='title'>{item.title}</View>
+                <View className='content'>{item.content}</View>
+              </View>
+              <View className='module-list__arrow'>
+                <Text className='at-icon at-icon-chevron-right' />
+              </View>
+            </View>
+          ))}
+        </View>
       </View>
     )
   }
